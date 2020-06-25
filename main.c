@@ -5,6 +5,26 @@
 
 enum {real_, complex_} number_system;
 
+void push_real(double);
+double pop_real(void);
+struct
+{
+	double *ptr;
+	int size;
+	void (*push)(double);
+	double (*pop)(void);
+} calculation_stack_real = {NULL, 0, push_real, pop_real};
+
+void push_complex(complex double);
+complex double pop_complex(void);
+struct
+{
+	complex double *ptr;
+	int size;
+	void (*push)(complex double);
+	complex double (*pop)(void);
+} calculation_stack_complex = {NULL, 0, push_complex, pop_complex};
+
 int is_equal_str(const char *str1, const char *str2);
 char *get_line(void);
 
@@ -23,6 +43,34 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+void push_real(double var)
+{
+	calculation_stack_real.ptr = (double *)realloc(calculation_stack_real.ptr, ++calculation_stack_real.size);
+	calculation_stack_real.ptr[calculation_stack_real.size - 1] = var;
+	return;
+}
+
+double pop_real(void)
+{
+	double var = calculation_stack_real.ptr[--calculation_stack_real.size];
+	calculation_stack_real.ptr = (double *)realloc(calculation_stack_real.ptr, calculation_stack_real.size);
+	return var;
+}
+
+void push_complex(complex double var)
+{
+	calculation_stack_complex.ptr = (complex double *)realloc(calculation_stack_complex.ptr, ++calculation_stack_complex.size);
+	calculation_stack_complex.ptr[calculation_stack_complex.size - 1] = var;
+	return;
+}
+
+complex double pop_complex(void)
+{
+	complex double var = calculation_stack_complex.ptr[--calculation_stack_complex.size];
+	calculation_stack_complex.ptr = (complex double *)realloc(calculation_stack_complex.ptr, calculation_stack_complex.size);
+	return var;
+}
+
 int is_equal_str(const char *str1, const char *str2)
 {
 	int i = 0;
@@ -39,9 +87,11 @@ char *get_line(void)
 	free(str);
 	int size = 1;
 	str = malloc(size);
+	printf("=> ");
 	while((str[size - 1] = getchar()) != '\n')
 	{
 		str = (char *)realloc((void *)str, ++size);
 	}
+	str[size - 1] = '\0';
 	return str;
 }
