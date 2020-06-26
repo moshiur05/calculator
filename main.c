@@ -25,22 +25,35 @@ struct
 	complex double (*pop)(void);
 } calculation_stack_complex = {NULL, 0, push_complex, pop_complex};
 
+int choose_number_system(char *);
 int is_equal_str(const char *str1, const char *str2);
 char *get_line(void);
 
 int main(int argc, char **argv)
 {
-	if(is_equal_str(argv[1], "real")){number_system = real_;}
-	else if(is_equal_str(argv[1], "complex")){number_system = complex_;}
-	else {return 1;}
-
+	if(choose_number_system(argv[1]) == EXIT_FAILURE){return EXIT_FAILURE;}
 	char *input;
 	while(!is_equal_str((input = get_line()), "exit"))
 	{
-		;
+		if(choose_number_system(input) == EXIT_SUCCESS){continue;}
 	}
 
 	return 0;
+}
+
+int choose_number_system(char *str)
+{
+	if(is_equal_str(str, "real"))
+	{
+		number_system = real_;
+	} else if(is_equal_str(str, "complex"))
+	{
+		number_system = complex_;
+	} else
+	{
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }
 
 void push_real(double var)
