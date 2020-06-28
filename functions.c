@@ -8,7 +8,7 @@ int offset = 0;
 void push_(void *);
 void pop_(void);
 struct calculation_stack_ calculation_stack = {NULL, -1, push_, pop_};
-struct num_stack_ num_stack = {NULL, 0};
+struct num_stack_ num_stack = {NULL, -1};
 enum action_ *action = NULL;
 
 int is_equal_str(const char *str1, const char *str2)
@@ -124,6 +124,6 @@ void reset_memory(void)
 	free(calculation_stack.ptr);
 	calculation_stack.ptr = NULL;
 
-	num_stack.index = 0;
+	num_stack.index = -1;
 	calculation_stack.index = -1;
 }

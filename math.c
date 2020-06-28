@@ -49,24 +49,24 @@ void exec_dvar_func(double (*funcr)(double, double), complex double (*funcc)(com
 }
 
 double add(double num1, double num2){return num1 + num2;}
-complex double cadd(complex double num1, complex double num2){return num1 + num2;}
 double substract(double num1, double num2){return num1 - num2;}
-complex double csubstract(complex double num1, complex double num2){return num1 - num2;}
 double multiply(double num1, double num2){return num1*num2;}
-complex double cmultiply(complex double num1, complex double num2){return num1*num2;}
 double divide(double num1, double num2){return num1/num2;}
-complex double cdivide(complex double num1, complex double num2){return num1/num2;}
 double sec(double num){return 1/cos(num);}
-complex double csec(complex double num){return 1/ccos(num);}
 double cosec(double num){return 1/sin(num);}
-complex double ccosec(complex double num){return 1/csin(num);}
 double cot(double num){return 1/tan(num);}
-complex double ccot(complex double num){return 1/ctan(num);}
 double asec(double num){return acos(1/num);}
-complex double casec(complex double num){return cacos(1/num);}
 double acosec(double num){return asin(1/num);}
-complex double cacosec(complex double num){return casin(1/num);}
 double acot(double num){return atan(1/num);}
+complex double cadd(complex double num1, complex double num2){return num1 + num2;}
+complex double csubstract(complex double num1, complex double num2){return num1 - num2;}
+complex double cmultiply(complex double num1, complex double num2){return num1*num2;}
+complex double cdivide(complex double num1, complex double num2){return num1/num2;}
+complex double csec(complex double num){return 1/ccos(num);}
+complex double ccosec(complex double num){return 1/csin(num);}
+complex double ccot(complex double num){return 1/ctan(num);}
+complex double casec(complex double num){return cacos(1/num);}
+complex double cacosec(complex double num){return casin(1/num);}
 complex double cacot(complex double num){return catan(1/num);}
 
 void do_action(int i)
@@ -92,6 +92,8 @@ void do_action(int i)
 		case DIVIDE :
 			exec_dvar_func(divide, cdivide);
 			break;
+		case ABS :
+			exec_svar_func(fabs, cabs);
 		case EXP :
 			exec_svar_func(exp, cexp);
 			break;
@@ -100,8 +102,6 @@ void do_action(int i)
 			break;
 		case POW :
 			exec_dvar_func(pow, cpow);
-			break;
-		case LOG :
 			break;
 		case COS :
 			exec_svar_func(cos, ccos);
