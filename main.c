@@ -1,8 +1,5 @@
 #include "stacks_and_enums.h"
-#include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <complex.h>
 
 int choose_number_system(char *);
 int is_equal_str(const char *str1, const char *str2);

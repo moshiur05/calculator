@@ -1,34 +1,5 @@
 #include <stdio.h>
 
-#ifndef MATH_MODULE
-#define MATH_MODULE
-
-struct math_
-{
-	void (*add)(void);
-	void (*substract)(void);
-	void (*multiply)(void);
-	void (*divide)(void);
-	void (*exp)(void);
-	void (*ln)(void);
-	void (*pow)(void);
-	void (*log)(void);
-	void (*cos)(void);
-	void (*sin)(void);
-	void (*tan)(void);
-	void (*sec)(void);
-	void (*cosec)(void);
-	void (*cot)(void);
-	void (*acos)(void);
-	void (*asin)(void);
-	void (*atan)(void);
-	void (*asec)(void);
-	void (*acosec)(void);
-	void (*acot)(void);
-};
-
-#endif
-
 #ifndef STACKS
 #define STACKS
 
@@ -37,7 +8,7 @@ void pop_(void);
 struct calculation_stack_
 {
 	void *ptr;
-	int size;
+	int index;
 	void (*push)(void *);
 	void (*pop)(void);
 };

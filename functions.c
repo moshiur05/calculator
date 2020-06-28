@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <complex.h>
 
-enum number_system_ number_system;
+enum number_system_ number_system = real_;
 int offset = 0;
-struct calculation_stack_ calculation_stack = {NULL, 0, push_, pop_};
+struct calculation_stack_ calculation_stack = {NULL, -1, push_, pop_};
 struct num_stack_ num_stack = {NULL, 0};
-enum action_ *action;
+enum action_ *action = NULL;
 
 int is_equal_str(const char *str1, const char *str2)
 {
@@ -41,12 +41,12 @@ void push_(void *numptr)
 {
 	if(number_system == real_)
 	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, ++calculation_stack.size*(sizeof(double)));
-		((double *)calculation_stack.ptr)[calculation_stack.size - 1] = *((double *)numptr);
+		calculation_stack.ptr = realloc(calculation_stack.ptr, (++calculation_stack.index + 1)*(sizeof(double)));
+		((double *)calculation_stack.ptr)[calculation_stack.index] = *((double *)numptr);
 	} else if(number_system == complex_)
 	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, ++calculation_stack.size*(sizeof(complex double)));
-		((complex double *)calculation_stack.ptr)[calculation_stack.size - 1] = *((complex double *)numptr);
+		calculation_stack.ptr = realloc(calculation_stack.ptr, (++calculation_stack.index + 1)*(sizeof(complex double)));
+		((complex double *)calculation_stack.ptr)[calculation_stack.index - 1] = *((complex double *)numptr);
 	}
 	return;
 }
@@ -55,11 +55,12 @@ void pop_(void)
 {
 	if(number_system == real_)
 	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, --calculation_stack.size*(sizeof(double)));
+		calculation_stack.ptr = realloc(calculation_stack.ptr, calculation_stack.index*(sizeof(double)));
 	} else if(number_system == complex_)
 	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, --calculation_stack.size*(sizeof(complex double)));
+		calculation_stack.ptr = realloc(calculation_stack.ptr, calculation_stack.index*(sizeof(complex double)));
 	}
+	--calculation_stack.index;
 	return;
 }
 
@@ -120,5 +121,5 @@ void reset_memory(void)
 	calculation_stack.ptr = NULL;
 
 	num_stack.index = 0;
-	calculation_stack.size = 0;
+	calculation_stack.index = -1;
 }

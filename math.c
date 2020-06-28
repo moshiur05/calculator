@@ -1,28 +1,73 @@
 #include "stacks_and_enums.h"
+#include <math.h>
+#include <complex.h>
+#include <stdlib.h>
 
-void add__(void);
-void substract__(void);
-void multiply__(void);
-void divide__(void);
-void exp__(void);
-void ln__(void);
-void pow__(void);
-void log__(void);
-void cos__(void);
-void sin__(void);
-void tan__(void);
-void sec__(void);
-void cosec__(void);
-void cot__(void);
-void acos__(void);
-void asin__(void);
-void atan__(void);
-void asec__(void);
-void acosec__(void);
-void acot__(void);
+void exec_svar_func(double (*funcr)(double), complex double (*funcc)(complex double))
+{
+	extern enum number_system_ number_system;
+	extern struct calculation_stack_ calculation_stack;
+	extern int offset;
 
-struct math_ math = {add__, substract__, multiply__, divide__, exp__, ln__, pow__, log__,
-	cos__, sin__, tan__, sec__, cosec__, cot__, acos__, asin__, atan__, asec__, acosec__, acot__};
+	void *numptr = malloc((size_t)offset);
+	switch(number_system)
+	{
+		case real_ :
+			*((double *)numptr) = funcr(((double *)calculation_stack.ptr)[calculation_stack.index]);
+			break;
+		case complex_ :
+			*((complex double*)numptr) = funcc(((complex double*)calculation_stack.ptr)[calculation_stack.index]);
+			break;
+	}
+	calculation_stack.pop();
+	calculation_stack.push(numptr);
+	free(numptr);
+	return;
+}
+
+void exec_dvar_func(double (*funcr)(double, double), complex double (*funcc)(complex double, complex double))
+{
+	extern enum number_system_ number_system;
+	extern int offset;
+	extern struct calculation_stack_ calculation_stack;
+
+	void *numptr = malloc((size_t)offset);
+	switch(number_system)
+	{
+		case real_ :
+			*((double *)numptr) = funcr(((double *)calculation_stack.ptr)[calculation_stack.index], ((double *)calculation_stack.ptr)[calculation_stack.index - 1]);
+			break;
+		case complex_ :
+			*((complex double *)numptr) = funcc(((complex double *)calculation_stack.ptr)[calculation_stack.index], ((complex double *)calculation_stack.ptr)[calculation_stack.index - 1]);
+			break;
+	}
+	calculation_stack.pop();
+	calculation_stack.pop();
+	calculation_stack.push(numptr);
+	free(numptr);
+	return;
+}
+
+double add(double, double);
+complex double cadd(complex double, complex double);
+double substract(double, double);
+complex double csubstract(complex double, complex double);
+double multiply(double, double);
+complex double cmultiply(complex double, complex double);
+double divide(double, double);
+complex double cdivide(complex double, complex double);
+double sec(double);
+complex double csec(complex double);
+double cosec(double);
+complex double ccosec(complex double);
+double cot(double);
+complex double ccot(complex double);
+double asec(double);
+complex double casec(complex double);
+double acosec(double);
+complex double cacosec(complex double);
+double acot(double);
+complex double cacot(complex double);
 
 void do_action(int i)
 {
@@ -36,64 +81,63 @@ void do_action(int i)
 			calculation_stack.push((void *)((char *)num_stack.ptr + offset*num_stack.index++));
 			break;
 		case ADD :
-			math.add();
+			exec_dvar_func(add, cadd);
 			break;
 		case SUBSTRACT :
-			math.substract();
+			exec_dvar_func(substract, csubstract);
 			break;
 		case MULTIPLY :
-			math.multiply();
+			exec_dvar_func(multiply, cmultiply);
 			break;
 		case DIVIDE :
-			math.divide();
+			exec_dvar_func(divide, cdivide);
 			break;
 		case EXP :
-			math.exp();
+			exec_svar_func(exp, cexp);
 			break;
 		case LN :
-			math.ln();
+			exec_svar_func(log, clog);
 			break;
 		case POW :
-			math.pow();
+			exec_dvar_func(pow, cpow);
 			break;
 		case LOG :
-			math.log();
 			break;
 		case COS :
-			math.cos();
+			exec_svar_func(cos, ccos);
 			break;
 		case SIN :
-			math.sin();
+			exec_svar_func(sin, csin);
 			break;
 		case TAN :
-			math.tan();
+			exec_svar_func(tan, ctan);
 			break;
 		case SEC :
-			math.sec();
+			exec_svar_func(sec, csec);
 			break;
 		case COSEC :
-			math.cosec();
+			exec_svar_func(cosec, ccosec);
 			break;
 		case COT :
-			math.cot();
+			exec_svar_func(cot, ccot);
 			break;
 		case ACOS :
-			math.acos();
+			exec_svar_func(acos, cacos);
 			break;
 		case ASIN :
-			math.asin();
+			exec_svar_func(asin, casin);
 			break;
 		case ATAN :
-			math.atan();
+			exec_svar_func(atan, catan);
 			break;
 		case ASEC :
-			math.asec();
+			exec_svar_func(asec, casec);
 			break;
 		case ACOSEC :
-			math.acosec();
+			exec_svar_func(acosec, cacosec);
 			break;
 		case ACOT :
-			math.acot();
+			exec_svar_func(acot, cacot);
 			break;
 		case EXIT :
 			break;
