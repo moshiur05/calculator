@@ -3,8 +3,6 @@
 #ifndef STACKS
 #define STACKS
 
-void push_(void *);
-void pop_(void);
 struct calculation_stack_
 {
 	void *ptr;

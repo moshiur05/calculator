@@ -5,6 +5,8 @@
 
 enum number_system_ number_system = real_;
 int offset = 0;
+void push_(void *);
+void pop_(void);
 struct calculation_stack_ calculation_stack = {NULL, -1, push_, pop_};
 struct num_stack_ num_stack = {NULL, 0};
 enum action_ *action = NULL;
@@ -83,12 +85,14 @@ size_t gen_num_stack_size(char *);
 void gen_num_stack(char * input)
 {
 	num_stack.ptr = malloc(gen_num_stack_size(input));
+	return;
 }
 
-int gen_action_array_size(char *);
+size_t gen_action_array_size(char *);
 void gen_action(char *input)
 {
 	action = (enum action_ *)malloc(gen_action_array_size(input));
+	return;
 }
 
 void do_action(int);
