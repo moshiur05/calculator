@@ -1,9 +1,7 @@
-#include <stdio.h>
-
 #ifndef STACKS
 #define STACKS
 
-struct calculation_stack_
+struct calc_stack_
 {
 	void *ptr;
 	int index;
@@ -15,11 +13,14 @@ struct num_stack_
 {
 	void *ptr;
 	int index;
+	void (*push)(void *);
 };
+
 #endif
 
 #ifndef ENUMS
 #define ENUMS
+
 enum number_system_ {real_, complex_};
 
 enum action_
@@ -47,4 +48,5 @@ enum action_
 	ACOSEC,
 	ACOT
 };
+
 #endif

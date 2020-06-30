@@ -1,24 +1,22 @@
-#include "stacks_and_enums.h"
+#include "definitions.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
 
 enum number_system_ number_system = real_;
 int offset = 0;
-void push_(void *);
-void pop_(void);
-struct calculation_stack_ calculation_stack = {NULL, -1, push_, pop_};
-struct num_stack_ num_stack = {NULL, -1};
+extern struct calc_stack_ calc_stack;
+extern struct num_stack_ num_stack;
 enum action_ *action = NULL;
 
 int is_equal_str(const char *str1, const char *str2)
 {
-	int i = 0;
+	int det = 0;
 	for(int i = 0; str1[i] != '\0'; ++i)
 	{
-		i += (str1[i] != str2[i]);
+		det += (str1[i] != str2[i]);
 	}
-	return !i;
+	return !det;
 }
 
 int choose_number_system(char *str)
@@ -39,32 +37,6 @@ int choose_number_system(char *str)
 	return EXIT_SUCCESS;
 }
 
-void push_(void *numptr)
-{
-	if(number_system == real_)
-	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, (++calculation_stack.index + 1)*(sizeof(double)));
-		((double *)calculation_stack.ptr)[calculation_stack.index] = *((double *)numptr);
-	} else if(number_system == complex_)
-	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, (++calculation_stack.index + 1)*(sizeof(complex double)));
-		((complex double *)calculation_stack.ptr)[calculation_stack.index - 1] = *((complex double *)numptr);
-	}
-	return;
-}
-
-void pop_(void)
-{
-	if(number_system == real_)
-	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, calculation_stack.index*(sizeof(double)));
-	} else if(number_system == complex_)
-	{
-		calculation_stack.ptr = realloc(calculation_stack.ptr, calculation_stack.index*(sizeof(complex double)));
-	}
-	--calculation_stack.index;
-	return;
-}
 
 char *get_line(void)
 {
@@ -106,10 +78,10 @@ void gen_result(void)
 	switch(number_system)
 	{
 		case real_ :
-			printf("Ans = %lf\n", *((double *)calculation_stack.ptr));
+			printf("Ans = %lf\n", *((double *)calc_stack.ptr));
 			break;
 		case complex_ :
-			printf("Ans = %lf + %lf i\n", creal(*((complex double *)calculation_stack.ptr)), cimag(*((complex double *)calculation_stack.ptr)));
+			printf("Ans = %lf + %lf i\n", creal(*((complex double *)calc_stack.ptr)), cimag(*((complex double *)calc_stack.ptr)));
 			break;
 	}
 	return;
@@ -121,9 +93,22 @@ void reset_memory(void)
 	num_stack.ptr = NULL;
 	free((void *)action);
 	action = NULL;
-	free(calculation_stack.ptr);
-	calculation_stack.ptr = NULL;
+	free(calc_stack.ptr);
+	calc_stack.ptr = NULL;
 
 	num_stack.index = -1;
-	calculation_stack.index = -1;
+	calc_stack.index = -1;
+}
+
+void run_calc()
+{
+	char *input = NULL;
+	while(!is_equal_str((input = get_line()), "exit"))
+	{
+		if(choose_number_system(input) == EXIT_SUCCESS){continue;}
+		gen_num_stack(input);
+		gen_action(input);
+		gen_result();
+		reset_memory();
+	}
 }
