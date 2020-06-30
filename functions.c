@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
+#include <ctype.h>
 
 enum number_system_ number_system = real_;
 int offset = 0;
@@ -53,10 +54,53 @@ char *get_line(void)
 	return str;
 }
 
-size_t gen_num_stack_size(char *);
-void gen_num_stack(char * input)
+complex double strtocmplx(char *input, char **endptr)
 {
-	num_stack.ptr = malloc(gen_num_stack_size(input));
+	complex double cmplx_num;
+	cmplx_num = strtod(input, endptr);
+	while(**endptr != '+' || **endptr != '-')
+	{
+		if(isdigit(**endptr)){break;}
+		++endptr;
+	}
+	if(**endptr == '+' || **endptr == '-')
+	{
+		cmplx_num += strtod(*endptr, endptr)*1i;
+	}
+	return cmplx_num;
+}
+
+void *getnum_and_update_index(char *input, int *intptr)
+{
+	static void *vptr = NULL;
+	free(vptr);
+	char *endptr;
+	if(number_system == real_)
+	{
+		vptr = malloc(sizeof(double));
+		*((double *)vptr) = strtod(input, &endptr);
+	} else if(number_system == complex_)
+	{
+		vptr = malloc(sizeof(complex double));
+		*((complex double *)vptr) = strtocmplx(input, &endptr);
+	}
+	else
+	{
+		exit(EXIT_FAILURE);
+	}
+	*intptr += abs((int)((long int)endptr - (long int)input));
+	return vptr;
+}
+
+void gen_num_stack(char *input)
+{
+	for(int i = 0; input[i] != '\0'; ++i)
+	{
+		if(isdigit(input[i]))
+		{
+			num_stack.push(getnum_and_update_index(input + i, &i));
+		}
+	}
 	return;
 }
 
