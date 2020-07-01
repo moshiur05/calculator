@@ -6,8 +6,6 @@
 
 enum number_system_ number_system = real_;
 int offset = 0;
-extern struct calc_stack_ calc_stack;
-extern struct num_stack_ num_stack;
 enum action_ *action = NULL;
 
 int is_equal_str(const char *str1, const char *str2)
@@ -22,6 +20,7 @@ int is_equal_str(const char *str1, const char *str2)
 
 int choose_number_system(char *str)
 {
+	extern enum number_system_ number_system;
 	extern int offset;
 	if(is_equal_str(str, "real"))
 	{
@@ -58,20 +57,13 @@ complex double strtocmplx(char *input, char **endptr)
 {
 	complex double cmplx_num;
 	cmplx_num = strtod(input, endptr);
-	while(**endptr != '+' || **endptr != '-')
-	{
-		if(isdigit(**endptr)){break;}
-		++endptr;
-	}
-	if(**endptr == '+' || **endptr == '-')
-	{
-		cmplx_num += strtod(*endptr, endptr)*1i;
-	}
+	cmplx_num += strtod(*endptr, endptr)*1i;
 	return cmplx_num;
 }
 
 void *getnum_and_update_index(char *input, int *intptr)
 {
+	extern enum number_system_ number_system;
 	static void *vptr = NULL;
 	free(vptr);
 	char *endptr;
@@ -94,6 +86,7 @@ void *getnum_and_update_index(char *input, int *intptr)
 
 void gen_num_stack(char *input)
 {
+	extern struct num_stack_ num_stack;
 	for(int i = 0; input[i] != '\0'; ++i)
 	{
 		if(isdigit(input[i]))
@@ -101,19 +94,27 @@ void gen_num_stack(char *input)
 			num_stack.push(getnum_and_update_index(input + i, &i));
 		}
 	}
+	num_stack.index = 0;
 	return;
 }
 
-size_t gen_action_array_size(char *);
 void gen_action(char *input)
 {
-	action = (enum action_ *)malloc(gen_action_array_size(input));
+	extern enum action_ *action;
+	action = (enum action_ *)malloc(3*sizeof(enum action_));
+	action[0] = NUMBER;
+	action[1] = NUMBER;
+	action[2] = ADD;
+	action[3] = EXIT;
 	return;
 }
 
 void do_action(int);
 void gen_result(void)
 {
+	extern enum number_system_ number_system;
+	extern enum action_ *action;
+	extern struct calc_stack_ calc_stack;
 	for(int i = 0; action[i] != EXIT; ++i)
 	{
 		do_action(i);
@@ -133,6 +134,9 @@ void gen_result(void)
 
 void reset_memory(void)
 {
+	extern struct calc_stack_ calc_stack;
+	extern enum action_ *action;
+	extern struct num_stack_ num_stack;
 	free(num_stack.ptr);
 	num_stack.ptr = NULL;
 	free((void *)action);
