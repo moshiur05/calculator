@@ -1,4 +1,4 @@
-#include "definitions.h"
+#include "definitions.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <complex.h>
@@ -6,7 +6,7 @@
 
 enum number_system_ number_system = real_;
 int offset = 0;
-enum action_ *action = NULL;
+enum operator_ *operator = NULL;
 
 int is_equal_str(const char *str1, const char *str2)
 {
@@ -53,71 +53,17 @@ char *get_line(void)
 	return str;
 }
 
-complex double strtocmplx(char *input, char **endptr)
-{
-	complex double cmplx_num;
-	cmplx_num = strtod(input, endptr);
-	cmplx_num += strtod(*endptr, endptr)*1i;
-	return cmplx_num;
-}
+void gen_operator_sequence(char *input);
 
-void *getnum_and_update_index(char *input, int *intptr)
-{
-	extern enum number_system_ number_system;
-	static void *vptr = NULL;
-	free(vptr);
-	char *endptr;
-	if(number_system == real_)
-	{
-		vptr = malloc(sizeof(double));
-		*((double *)vptr) = strtod(input, &endptr);
-	} else if(number_system == complex_)
-	{
-		vptr = malloc(sizeof(complex double));
-		*((complex double *)vptr) = strtocmplx(input, &endptr);
-	}
-	else
-	{
-		exit(EXIT_FAILURE);
-	}
-	*intptr += abs((int)((long int)endptr - (long int)input));
-	return vptr;
-}
-
-void gen_num_stack(char *input)
-{
-	extern struct num_stack_ num_stack;
-	for(int i = 0; input[i] != '\0'; ++i)
-	{
-		if(isdigit(input[i]))
-		{
-			num_stack.push(getnum_and_update_index(input + i, &i));
-		}
-	}
-	num_stack.index = 0;
-	return;
-}
-
-void gen_action(char *input)
-{
-	extern enum action_ *action;
-	action = (enum action_ *)malloc(3*sizeof(enum action_));
-	action[0] = NUMBER;
-	action[1] = NUMBER;
-	action[2] = ADD;
-	action[3] = EXIT;
-	return;
-}
-
-void do_action(int);
+void operate(enum operator_);
 void gen_result(void)
 {
 	extern enum number_system_ number_system;
-	extern enum action_ *action;
+	extern enum operator_ *operator;
 	extern struct calc_stack_ calc_stack;
-	for(int i = 0; action[i] != EXIT; ++i)
+	for(int i = 0; operator[i] != EXIT; ++i)
 	{
-		do_action(i);
+		operate(operator[i]);
 	}
 
 	switch(number_system)
@@ -135,12 +81,12 @@ void gen_result(void)
 void reset_memory(void)
 {
 	extern struct calc_stack_ calc_stack;
-	extern enum action_ *action;
+	extern enum operator_ *operator;
 	extern struct num_stack_ num_stack;
 	free(num_stack.ptr);
 	num_stack.ptr = NULL;
-	free((void *)action);
-	action = NULL;
+	free((void *)operator);
+	operator = NULL;
 	free(calc_stack.ptr);
 	calc_stack.ptr = NULL;
 
@@ -148,6 +94,7 @@ void reset_memory(void)
 	calc_stack.index = -1;
 }
 
+void gen_num_stack(char *);
 void run_calc()
 {
 	char *input = NULL;
@@ -155,7 +102,7 @@ void run_calc()
 	{
 		if(choose_number_system(input) == EXIT_SUCCESS){continue;}
 		gen_num_stack(input);
-		gen_action(input);
+		gen_operator_sequence(input);
 		gen_result();
 		reset_memory();
 	}

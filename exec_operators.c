@@ -1,4 +1,4 @@
-#include "definitions.h"
+#include "definitions.c"
 #include <math.h>
 #include <complex.h>
 #include <stdlib.h>
@@ -70,13 +70,12 @@ complex double cacosec(complex double num){return casin(1/num);}
 complex double cacot(complex double num){return catan(1/num);}
 complex double cabs_(complex double num){return (complex double)(cabs(num));}
 
-void do_action(int i)
+void operate(enum operator_ operator)
 {
-	extern enum action_ *action;
 	extern int offset;
 	extern struct calc_stack_ calc_stack;
 	extern struct num_stack_ num_stack;
-	switch(action[i])
+	switch(operator)
 	{
 		case NUMBER :
 			calc_stack.push((void *)((char *)num_stack.ptr + offset*num_stack.index++));

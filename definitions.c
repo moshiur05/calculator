@@ -23,7 +23,7 @@ struct num_stack_
 
 enum number_system_ {real_, complex_};
 
-enum action_
+enum operator_
 {
 	EXIT,
 	NUMBER,
