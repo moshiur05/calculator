@@ -25,7 +25,6 @@ enum number_system_ {real_, complex_};
 
 enum operator_
 {
-	EXIT,
 	NUMBER,
 	ADD,
 	SUBSTRACT,
@@ -46,7 +45,9 @@ enum operator_
 	ATAN,
 	ASEC,
 	ACOSEC,
-	ACOT
+	ACOT,
+	BRACKET,
+	EXIT
 };
 
 #endif

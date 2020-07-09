@@ -5,13 +5,12 @@
 #include <ctype.h>
 
 enum number_system_ number_system = real_;
-int offset = 0;
-enum operator_ *operator = NULL;
+int offset = (int)sizeof(double);
 
 int is_equal_str(const char *str1, const char *str2)
 {
 	int det = 0;
-	for(int i = 0; str1[i] != '\0'; ++i)
+	for(int i = 0; str2[i] != '\0'; ++i)
 	{
 		det += (str1[i] != str2[i]);
 	}
@@ -83,15 +82,20 @@ void reset_memory(void)
 	extern struct calc_stack_ calc_stack;
 	extern enum operator_ *operator;
 	extern struct num_stack_ num_stack;
+	extern enum operator_ *expression;
+	extern int expression_index;
 	free(num_stack.ptr);
 	num_stack.ptr = NULL;
 	free((void *)operator);
 	operator = NULL;
 	free(calc_stack.ptr);
 	calc_stack.ptr = NULL;
+	free((void *)expression);
+	expression = NULL;
 
 	num_stack.index = -1;
 	calc_stack.index = -1;
+	expression_index = -1;
 }
 
 void gen_num_stack(char *);

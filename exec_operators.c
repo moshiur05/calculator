@@ -139,6 +139,8 @@ void operate(enum operator_ operator)
 		case ACOT :
 			exec_svar_func(acot, cacot);
 			break;
+		case BRACKET :
+			break;
 		case EXIT :
 			break;
 	}
