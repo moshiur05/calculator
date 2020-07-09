@@ -3,21 +3,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-enum operator_ *operator = NULL;
-enum operator_ *expression = NULL;
-int expression_index = -1;
-
 int is_equal_str(char *, char *);
 
 void get_expression(char *);
 void gen_operator_sequence(char *input)
 {
 	extern enum operator_ *operator, *expression;
-	//operator = (enum operator_ *)malloc(4*sizeof(enum operator_));
-	//operator[0] = NUMBER;
-	//operator[1] = NUMBER;
-	//operator[2] = ADD;
-	//operator[3] = EXIT;
 	get_expression(input);
 	operator = expression;
 	return;
@@ -38,6 +29,7 @@ void get_expression(char *input)
 
 int get_operator_and_update_index(char *cptr)
 {
+	extern enum number_system_ number_system;
 	int i = 0;
 	if(((*cptr == '+') || (*cptr == '-')) && isdigit(cptr[1]))
 	{
@@ -47,6 +39,15 @@ int get_operator_and_update_index(char *cptr)
 			++i;
 			++cptr;
 		} while(isdigit(*cptr));
+		if(number_system == complex_)
+		{
+			do
+			{
+				++i;
+				++cptr;
+			} while(isdigit(*cptr));
+			++i;
+		}
 	} else if(*cptr == '+')
 	{
 		++i;
