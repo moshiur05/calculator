@@ -38,14 +38,14 @@ int get_operator_and_update_index(char *cptr)
 		{
 			++i;
 			++cptr;
-		} while(isdigit(*cptr));
+		} while(isdigit(*cptr) || *cptr == '.');
 		if(number_system == complex_)
 		{
 			do
 			{
 				++i;
 				++cptr;
-			} while(isdigit(*cptr));
+			} while(isdigit(*cptr) || *cptr == '.');
 			++i;
 		}
 	} else if(*cptr == '+')

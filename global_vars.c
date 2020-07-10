@@ -26,7 +26,7 @@ void reset_memory(void)
 	operator = NULL;
 	free(calc_stack.ptr);
 	calc_stack.ptr = NULL;
-	free((void *)expression);
+	//free((void *)expression);
 	expression = NULL;
 
 	num_stack.index = -1;

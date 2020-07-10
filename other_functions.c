@@ -50,8 +50,6 @@ char *get_line(void)
 	return str;
 }
 
-void gen_operator_sequence(char *input);
-
 void operate(enum operator_);
 void gen_result(void)
 {
@@ -75,6 +73,7 @@ void gen_result(void)
 	return;
 }
 
+void gen_operator_sequence(char *input);
 void gen_num_stack(char *);
 void reset_memory(void);
 void run_calc()
