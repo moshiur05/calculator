@@ -5,6 +5,7 @@
 #include <complex.h>
 #include <ctype.h>
 
+//push an operator in expression
 void update_expression(enum operator_ operator)
 {
 	extern enum operator_ *expression;
@@ -15,6 +16,7 @@ void update_expression(enum operator_ operator)
 
 int is_equal_str(char *, char *);
 
+//get operator and update index to next operator
 int get_operator_and_update_index(char *cptr)
 {
 	extern enum number_system_ number_system;
@@ -22,6 +24,7 @@ int get_operator_and_update_index(char *cptr)
 	if(((*cptr == '+') || (*cptr == '-')) && isdigit(cptr[1]))
 	{
 		update_expression(NUMBER);
+		//update index until crosses one double var
 		do
 		{
 			++i;
@@ -29,6 +32,7 @@ int get_operator_and_update_index(char *cptr)
 		} while(isdigit(*cptr) || *cptr == '.');
 		if(number_system == complex_)
 		{
+			//do it again for imaginary part
 			do
 			{
 				++i;
@@ -134,7 +138,7 @@ int get_operator_and_update_index(char *cptr)
 	return i;
 }
 
-//preliminary idea on the given expression
+//preliminary idea on the given expression consisting of an array of operators in user given sequence
 void get_expression(char *input)
 {
 	int i = 0;

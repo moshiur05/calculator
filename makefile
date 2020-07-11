@@ -9,6 +9,7 @@ OBJS = $(OBJDIR)/main.o $(OBJDIR)/core.o $(OBJDIR)/rpn_generator.o $(OBJDIR)/sha
 all : calculator
 
 build :
+	@echo "creating build directory"
 	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
@@ -20,11 +21,11 @@ calculator : build $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LIBS) -o $(EXDIR)/calculator
 
 test : calculate
-	$(EXDIR)/calculator <<< "+1 +2 +"
+	$(EXDIR)/calculator <<< $'+1 +2 +\nexit'
 
 run : calculate
 	$(EXDIR)/calculator
 
 clean :
 	@echo ">>> Removing builds"
-	rm -r OBJDIR $(EXDIR)/calculator
+	rm -r $(OBJDIR) $(EXDIR)/calculator
