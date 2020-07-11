@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O3 -Wall -Werror
+CFLAGS = -Wall -Werror
 LIBS = -lm
 SRCDIR = .
 OBJDIR = $(SRCDIR)/build
@@ -20,12 +20,12 @@ calculator : build $(OBJS)
 	@echo ">>> Starting to build the executable"
 	$(CC) $(OBJS) $(CFLAGS) $(LIBS) -o $(EXDIR)/calculator
 
-test : calculate
-	$(EXDIR)/calculator <<< $'+1 +2 +\nexit'
+test : calculator
+	$(EXDIR)/calculator <<< +1 +2 +
 
-run : calculate
+run : calculator
 	$(EXDIR)/calculator
 
 clean :
 	@echo ">>> Removing builds"
-	rm -r $(OBJDIR) $(EXDIR)/calculator
+	rm -rf $(OBJDIR) $(EXDIR)/calculator
