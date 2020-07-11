@@ -1,6 +1,7 @@
 #ifndef STACKS
 #define STACKS
 
+//for storing which operation to do
 struct calc_stack_
 {
 	void *ptr;
@@ -9,6 +10,7 @@ struct calc_stack_
 	void (*pop)(void);
 };
 
+//for storing numbers only
 struct num_stack_
 {
 	void *ptr;
