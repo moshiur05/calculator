@@ -15,7 +15,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo ">> Compiling $^..."
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-calculator : $(OBJS) build
+calculator : build $(OBJS)
 	@echo ">>> Starting to build the executable"
 	$(CC) $(OBJS) $(CFLAGS) $(LIBS) -o $(EXDIR)/calculator
 
