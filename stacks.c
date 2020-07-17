@@ -1,6 +1,7 @@
 #include "definitions.c"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <complex.h>
 #include <string.h>
@@ -55,7 +56,7 @@ void *getnum_and_update_index(char *input, int *intptr)
 	{
 		exit(EXIT_FAILURE);
 	}
-	*intptr += abs((int)((long long int)endptr - (long long int)input));
+	*intptr += abs((int)((uintptr_t)endptr - (uintptr_t)input));
 	return vptr;
 }
 
